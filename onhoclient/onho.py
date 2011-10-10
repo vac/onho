@@ -2,10 +2,12 @@
 #-*- coding: utf-8 -*-
 
 import pygame, sys, os
-sys.path.append('..')
 import random, math
 from pygame.locals import *
+import pygame._view
+sys.path.append('..')
 from onhocommon import board
+
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 liczba_graczy = 8
@@ -209,7 +211,15 @@ def main():
 #Create Layout
     plansza_rect = pygame.Rect((0, 0), (660, 660))
     plansza_img = pygame.image.load(os.path.join('data', "plansza.png")).convert_alpha()
+
     plansza = board.Board(width=660, height=660)
+    plansza_surface = pygame.Surface((660, 660))
+    print plansza_surface.set_colorkey((255, 255, 0))
+    plansza_surface.fill(plansza_surface.get_colorkey())
+    for srodek in plansza.hex_centres():
+        pygame.draw.polygon(plansza_surface, (0, 0, 0), plansza.hex_draw(srodek), 7)
+        pygame.draw.polygon(plansza_surface, (150, 150, 150), plansza.hex_draw(srodek), 3)
+        pygame.draw.polygon(plansza_surface, (255, 255, 255), plansza.hex_draw(srodek), 1)
 
     playerpanel_size = (660, 140)
 
@@ -260,15 +270,15 @@ def main():
 #Draw Everything
 
         screen.blit(plansza_img, (plansza_rect))
+        screen.blit(plansza_surface, (0, 0))
         for z in zeton_list:
             screen.blit(globals()[z].image, (globals()[z].rect))
 
-        for srodek in plansza.hex_centres():
-            pygame.draw.lines(screen, (0, 0, 0), True, plansza.hex_draw(srodek), 6)
-            pygame.draw.lines(screen, (200, 200, 200), True, plansza.hex_draw(srodek), 2)
 
         screen.blit(globals()[z].image, (globals()[z].rect))
         screen.blit(cursor.image, (cursor.rect))
         pygame.display.flip()
 
 #Game Over
+main()
+raise SystemExit
