@@ -130,60 +130,31 @@ class Board(object):
     def map_size(self):
         return self.map_width(), self.map_height()
 
+    def hex_draw(self, center, a=None):
+        if not a:
+            a = self.hex_a()
+        return (
+            (center[0] - a, int(center[1])),
+            (center[0] - a / 2.0, int(center[1] + a * sqrt(3) / 2.0)),
+            (center[0] + a / 2.0, int(center[1] + a * sqrt(3) / 2.0)),
+            (center[0] + a, int(center[1])),
+            (center[0] + a / 2.0, int(center[1] - a * sqrt(3) / 2.0)),
+            (center[0] - a / 2.0, int(center[1] - a * sqrt(3) / 2.0))
+        )
 
-def field_center(hex_a=68, margin_x=20, offset_x=None, offset_y=None):
-    """Zwraca srodki pól na mapie w px"""
-    margin_y = margin_x * sqrt(3) / 2.0
-    if not offset_x:
+    def hex_centres(self):
+        hex_a = self.hex_a()
+        margin_y = self.hex_margin * sqrt(3) / 2.0
         offset_x = hex_a
-    if not offset_y:
         offset_y = hex_a * sqrt(3) + margin_y / 2
-    for col, row in board_indexes():
-        yield (
-            offset_x + col * margin_x + col * 1.5 * hex_a,
-            offset_y + row * margin_y + row * hex_a * sqrt(3) - (col % 2) * (hex_a * sqrt(3) / 2.0 + margin_y / 2)
-        )
+        col_offset = min(self.map_cols())
+        row_offset = min(self.map_rows())
+        for col, row in self.map_indexes():
+            yield (
+                offset_x + (col - col_offset) * self.hex_margin + (col - col_offset) * 1.5 * hex_a,
+                offset_y + (row - row_offset) * margin_y + (row - row_offset) * hex_a * sqrt(3) - (col % 2) * (hex_a * sqrt(3) / 2.0 + margin_y / 2)
+            )
 
-def fld(hex_a, margin_x, indeksy, kolumny, wiersze):
-    margin_y = margin_x * sqrt(3) / 2.0
-    offset_x = hex_a
-    offset_y = hex_a * sqrt(3) + margin_y / 2
-    col_offset = min(kolumny)
-    row_offset = min(wiersze)
-    for col, row in indeksy:
-        yield (
-            offset_x + (col - col_offset) * margin_x + (col - col_offset) * 1.5 * hex_a,
-            offset_y + (row - row_offset) * margin_y + (row - row_offset) * hex_a * sqrt(3) - (col % 2) * (hex_a * sqrt(3) / 2.0 + margin_y / 2)
-        )
-
-def board_cols():
-    return list(set((index[1] for index in board_indexes())))
-
-def board_rows():
-    return list(set((index[0] for index in board_indexes())))
-
-def board_size_px(hex_a=68, margin_x=20):
-    izip(*board_indexes())
-
-def board_indexes():
-    """Zwraca indeksy pól na mapie"""
-    for col in range(11):
-        for row in range(7):
-            if not((col % 2 == 0) and (row == 6)):
-                yield (col, row)
-#max_x = 0
-#min_x = 1000
-#max_y = 0
-#min_y = 1000
-def draw_hex(srodek, a):
-    return (
-        srodek[0] - a, srodek[1],
-        int(srodek[0] - a / 2.0), int(srodek[1] + a * sqrt(3) / 2.0),
-        int(srodek[0] + a / 2.0), int(srodek[1] + a * sqrt(3) / 2.0),
-        srodek[0] + a, srodek[1],
-        int(srodek[0] + a / 2.0), int(srodek[1] - a * sqrt(3) / 2.0),
-        int(srodek[0] - a / 2.0), int(srodek[1] - a * sqrt(3) / 2.0)
-    )
 plansza = Board(map=maps.TEST)
 plansza.width = 640
 plansza.height = 640
@@ -195,8 +166,8 @@ im = Image.new('RGBA', (
 draw = ImageDraw.Draw(im)
 #index = board_indexes()
 #plansza = Board(map=maps.TEST)
-for srodek in fld(plansza.hex_a(), plansza.hex_margin, plansza.map_indexes(), plansza.map_cols(), plansza.map_rows()):
-    draw.polygon(draw_hex(srodek, plansza.hex_a()), outline='#0000FF')
+for srodek in plansza.hex_centres():
+    draw.polygon(plansza.hex_draw(srodek), outline='#0000FF')
 #    draw.text(srodek, str(index.next()), fill='#000000')
 #    #draw.text((srodek[0] + 20, srodek[1] + 20), str(index[0]) + ',' + str(index[1]), fill=128)
 del Draw
