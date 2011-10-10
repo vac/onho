@@ -2,3 +2,5 @@
 #-*- coding: utf-8 -*-
 
 import onho
+
+onho.main()

@@ -2,6 +2,7 @@
 #-*- coding: utf-8 -*-
 
 import pygame, sys, os
+sys.path.append('..')
 import random, math
 from pygame.locals import *
 from onhocommon import board
@@ -153,7 +154,6 @@ class Tiles():
 
     def clicked(self, button):
         if button == 0:
-            print self, "chuj"
             self.rot_var = 1
         elif button == 2:
             self.mov_var = 1
@@ -262,13 +262,13 @@ def main():
         screen.blit(plansza_img, (plansza_rect))
         for z in zeton_list:
             screen.blit(globals()[z].image, (globals()[z].rect))
+
         for srodek in plansza.hex_centres():
             pygame.draw.lines(screen, (0, 0, 0), True, plansza.hex_draw(srodek), 6)
-            pygame.draw.lines(screen, (250, 250, 250), True, plansza.hex_draw(srodek), 2)
+            pygame.draw.lines(screen, (200, 200, 200), True, plansza.hex_draw(srodek), 2)
+
         screen.blit(globals()[z].image, (globals()[z].rect))
         screen.blit(cursor.image, (cursor.rect))
         pygame.display.flip()
 
 #Game Over
-main()
-raise SystemExit
