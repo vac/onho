@@ -1,9 +1,6 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
-import Image, ImageDraw
-from ImageDraw import Draw
-from math import sqrt, ceil, floor
-from itertools import izip
+from math import sqrt
 import maps
 import unittest
 
@@ -36,7 +33,7 @@ class Board(object):
             return 0
 
         a_from_width = (self.width - 2 * self.board_margin - (size[0] - 1) * self.hex_margin - 1) / (size[0] * 1.5 + 1 / 2.0)
-        a_from_height = (self.height - 2 * self.board_margin - 1 - (size[1] - 1) * self.hex_margin * sqrt(3) / 2.0) / (size[1]*sqrt(3))
+        a_from_height = (self.height - 2 * self.board_margin - 1 - (size[1] - 1) * self.hex_margin * sqrt(3) / 2.0) / (size[1] * sqrt(3))
 
         return min(a_from_width, a_from_height)
 
@@ -130,6 +127,9 @@ class Board(object):
     def map_size(self):
         return self.map_width(), self.map_height()
 
+    def hex_under_mouse(self, position, index=None, center=None):
+        return False
+
     def hex_draw(self, center, a=None):
         if not a:
             a = self.hex_a()
@@ -155,23 +155,7 @@ class Board(object):
                 offset_y + (row - row_offset) * margin_y + (row - row_offset) * hex_a * sqrt(3) - (col % 2) * (hex_a * sqrt(3) / 2.0 + margin_y / 2)
             )
 
-plansza = Board(map=maps.TEST)
-plansza.width = 640
-plansza.height = 640
 
-im = Image.new('RGBA', (
-                       plansza.width,
-                       plansza.height
-                       ))
-draw = ImageDraw.Draw(im)
-#index = board_indexes()
-#plansza = Board(map=maps.TEST)
-for srodek in plansza.hex_centres():
-    draw.polygon(plansza.hex_draw(srodek), outline='#0000FF')
-#    draw.text(srodek, str(index.next()), fill='#000000')
-#    #draw.text((srodek[0] + 20, srodek[1] + 20), str(index[0]) + ',' + str(index[1]), fill=128)
-del Draw
-im.save('board.png', "PNG")
 
 class TestBoardFunctions(unittest.TestCase):
 
