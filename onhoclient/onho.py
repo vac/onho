@@ -175,7 +175,7 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode ([1000, 800])
     pygame.display.set_caption('Open Neuroshina Hex Online')
-    pygame.mouse.set_visible(0)
+#    pygame.mouse.set_visible(0)
 
 #Mouse init
     cursor = Cursor()
@@ -214,7 +214,7 @@ def main():
     plansza_img = pygame.image.load(os.path.join('data', "plansza.png")).convert_alpha()
 
     plansza = board.Board(width=660, height=660)
-    plansza_surface = pygame.Surface((660, 660)).convert_alpha()
+    plansza_surface = pygame.Surface((660, 660), SRCALPHA).convert_alpha()
 #    plansza_surface.set_colorkey((255, 255, 0))
 #    plansza_surface.fill(plansza_surface.get_colorkey())
     for srodek in plansza.hex_centres():
@@ -238,8 +238,14 @@ def main():
         if SHOW_FPS == 1:
             print clock.get_fps()
         clock.tick(60)
+        
+        screen.blit(plansza_img, (plansza_rect))
+        screen.blit(plansza_surface, (0, 0))
+        for z in zeton_list:
+            screen.blit(globals()[z].image, (globals()[z].rect))
+        screen.blit(cursor.image, (cursor.rect))
         for i in player_list:
-            screen.fill(globals()[i].color, rect=globals()[i].rect, special_flags=0)
+            screen.fill(globals()[i].color, rect=globals()[i].rect)
 
     #Handle Input Events
         for event in pygame.event.get():
@@ -270,13 +276,6 @@ def main():
             globals()[z].update()
 
 #Draw Everything
-
-        screen.blit(plansza_img, (plansza_rect))
-        screen.blit(plansza_surface, (0, 0))
-        for z in zeton_list:
-            screen.blit(globals()[z].image, (globals()[z].rect))
-
-        screen.blit(cursor.image, (cursor.rect))
         pygame.display.flip()
 
 #Game Over
