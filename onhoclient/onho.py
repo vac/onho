@@ -3,12 +3,13 @@
 
 import pygame, sys, os
 import random, math
-from pygame.locals import *
-import pygame._view
 sys.path.append('..')
+from pygame.locals import *
+#import pygame._view
 from onhocommon import board
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
+SHOW_FPS = 1
 
 liczba_graczy = 8
 player_list = []
@@ -214,7 +215,7 @@ def main():
 
     plansza = board.Board(width=660, height=660)
     plansza_surface = pygame.Surface((660, 660))
-    print plansza_surface.set_colorkey((255, 255, 0))
+    plansza_surface.set_colorkey((255, 255, 0))
     plansza_surface.fill(plansza_surface.get_colorkey())
     for srodek in plansza.hex_centres():
         pygame.draw.polygon(plansza_surface, (0, 0, 0), plansza.hex_draw(srodek), 7)
@@ -234,7 +235,8 @@ def main():
     logo = pygame.image.load(os.path.join('data', "logo.png")).convert_alpha()
 #Main Loop
     while 1:
-        print clock.get_fps()
+        if SHOW_FPS == 1:
+            print clock.get_fps()
         clock.tick(60)
         for i in player_list:
             screen.fill(globals()[i].color, rect=globals()[i].rect, special_flags=0)
@@ -274,11 +276,7 @@ def main():
         for z in zeton_list:
             screen.blit(globals()[z].image, (globals()[z].rect))
 
-
-        screen.blit(globals()[z].image, (globals()[z].rect))
         screen.blit(cursor.image, (cursor.rect))
         pygame.display.flip()
 
 #Game Over
-main()
-raise SystemExit
