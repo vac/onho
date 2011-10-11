@@ -214,7 +214,7 @@ def main():
     plansza_img = pygame.image.load(os.path.join('data', "plansza.png")).convert_alpha()
 
     plansza = board.Board(width=660, height=660)
-    plansza_surface = pygame.Surface((660, 660))
+    plansza_surface = pygame.Surface((660, 660)).convert_alpha()
     plansza_surface.set_colorkey((255, 255, 0))
     plansza_surface.fill(plansza_surface.get_colorkey())
     for srodek in plansza.hex_centres():
@@ -271,7 +271,7 @@ def main():
 
 #Draw Everything
 
-        screen.blit(plansza_img, (plansza_rect))
+#        screen.blit(plansza_img, (plansza_rect))
         screen.blit(plansza_surface, (0, 0))
         for z in zeton_list:
             screen.blit(globals()[z].image, (globals()[z].rect))
