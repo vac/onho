@@ -9,7 +9,7 @@ from pygame.locals import *
 from onhocommon import board
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
-SHOW_FPS = 1
+SHOW_FPS = 0
 
 liczba_graczy = 8
 player_list = []
@@ -18,6 +18,7 @@ liczba_zetonow = 3
 zeton_list = []
 
 rotate = pygame.transform.rotozoom
+rot_speed = 60
 clock = pygame.time.Clock()
 
 color_borgo = (24, 189, 238)
@@ -41,15 +42,27 @@ color_list = [
 (170, 98, 38),
 (204, 204, 202)
 ]
+
 aplayer_panel = pygame.Rect((0, 660), (660, 140))
 sidepanel_size = (340, 800 / liczba_graczy)
 panel_list = []
-
+    
 zeton_imgs = ['zet1.png', 'zet2.png', 'zet3.png']
 zetonsprites = []
 zetonslot1 = pygame.Rect((100, 650), (150, 150))
 zetonslot2 = pygame.Rect((300, 650), (150, 150))
 zetonslot3 = pygame.Rect((500, 650), (150, 150))
+
+pygame.init()
+pygame.mouse.set_visible(0)
+screen = pygame.display.set_mode ([1000, 800])
+pygame.display.set_caption('Open Neuroshina Hex Online')
+
+plansza_rect = pygame.Rect((0, 0), (660, 660))
+plansza_img = pygame.image.load(os.path.join('data', "plansza.png")).convert_alpha()
+
+plansza = board.Board(width=660, height=660)
+plansza_surface = pygame.Surface((660, 660), SRCALPHA).convert_alpha()
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -128,6 +141,8 @@ class Tiles():
             self.tile_angle = 360 + self.angle
         else:
             self.tile_angle = self.angle
+            
+        self.angle = self.tile_angle
 
         self.image = rotate(self.original, self.angle, 1)
         self.rect = self.image.get_rect(center=center)
@@ -140,20 +155,63 @@ class Tiles():
             self._spin()
         elif self.mov_var:
             self._moving()
-
-#   def magnes(self, x, y):
-#       a = self.rect.center[0]
-#       b = self.rect.center[1]
-#       print self.rect.center
-#       if self.rect.center[0]<x:
-#           print self.rect.center
-#           a = a-1
-#           self.rect.move_ip(a, b)
-#       elif self.rect.center[0]>x:
-#           print self.rect.center
-#           a = a+1
-#           self.rect.move_ip(a, b)
-
+            
+    def _rot(self, znak):
+        center = self.rect.center
+        clock.tick(rot_speed)
+        self.angle += znak
+        self.image = rotate(self.original, self.angle, 1)
+        self.rect = self.image.get_rect(center=center)
+        screen.blit(plansza_img, (plansza_rect))
+        screen.blit(plansza_surface, (0, 0))
+        screen.blit(self.image, (self.rect))
+        pygame.display.flip()
+        
+    def rotomagnes(self):
+        if self.angle > 30 and self.angle < 60:
+            while self.angle < 60:
+                self._rot(1)
+        elif self.angle > 60 and self.angle <= 90:
+            while self.angle > 60:
+                self._rot(-1)
+                                
+        elif self.angle > 90 and self.angle < 120:
+            while self.angle < 120:
+                self._rot(1)
+        elif self.angle > 120 and self.angle <= 150:
+            while self.angle > 120:
+                self._rot(-1)
+                                
+        elif self.angle > 150 and self.angle < 180:
+            while self.angle < 180:
+                self._rot(1)
+        elif self.angle > 180 and self.angle <= 210:
+            while self.angle > 180:
+                self._rot(-1)
+                
+        elif self.angle > 210 and self.angle < 240:
+            while self.angle < 240:
+                self._rot(1)
+        elif self.angle > 240 and self.angle <= 270:
+            while self.angle > 240:
+                self._rot(-1)       
+                         
+        elif self.angle > 270 and self.angle < 300:
+            while self.angle < 300:
+                self._rot(1)
+        elif self.angle > 300 and self.angle <= 330:
+            while self.angle > 300:
+                self._rot(-1)
+                                
+        elif self.angle > 330 and self.angle < 360:
+            while self.angle < 360:
+                self._rot(1)
+        elif self.angle > 0 and self.angle <= 30:
+            while self.angle > 0:
+                self._rot(-1)
+                
+        print self.rect.center
+        print self.angle
 
     def clicked(self, button):
         if button == 0:
@@ -164,18 +222,14 @@ class Tiles():
     def unclicked(self):
         if self.rot_var:
             self.rot_var = 0
+            print self.angle
+            self.rotomagnes()
         elif self.mov_var:
             self.mov_var = 0
 
 def main():
     liczba_pom = 0
     help_rect = pygame.Rect((660, 0), (0, 0))
-
-#Initialize Everything
-    pygame.init()
-    screen = pygame.display.set_mode ([1000, 800])
-    pygame.display.set_caption('Open Neuroshina Hex Online')
-#    pygame.mouse.set_visible(0)
 
 #Mouse init
     cursor = Cursor()
@@ -210,13 +264,7 @@ def main():
 
 
 #Create Layout
-    plansza_rect = pygame.Rect((0, 0), (660, 660))
-    plansza_img = pygame.image.load(os.path.join('data', "plansza.png")).convert_alpha()
 
-    plansza = board.Board(width=660, height=660)
-    plansza_surface = pygame.Surface((660, 660), SRCALPHA).convert_alpha()
-#    plansza_surface.set_colorkey((255, 255, 0))
-#    plansza_surface.fill(plansza_surface.get_colorkey())
     for srodek in plansza.hex_centres():
         pygame.draw.polygon(plansza_surface, (0, 0, 0), plansza.hex_draw(srodek), 7)
         pygame.draw.polygon(plansza_surface, (150, 150, 150), plansza.hex_draw(srodek), 3)
@@ -242,9 +290,12 @@ def main():
         screen.fill((70,70,70), rect=aplayer_panel)
         screen.blit(plansza_img, (plansza_rect))
         screen.blit(plansza_surface, (0, 0))
+        
         for z in zeton_list:
             screen.blit(globals()[z].image, (globals()[z].rect))
+            
         screen.blit(cursor.image, (cursor.rect))
+        
         for i in player_list:
             screen.fill(globals()[i].color, rect=globals()[i].rect)
             
