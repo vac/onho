@@ -41,7 +41,7 @@ color_list = [
 (170, 98, 38),
 (204, 204, 202)
 ]
-
+aplayer_panel = pygame.Rect((0, 660), (660, 140))
 sidepanel_size = (340, 800 / liczba_graczy)
 panel_list = []
 
@@ -239,6 +239,7 @@ def main():
             print clock.get_fps()
         clock.tick(60)
         
+        screen.fill((70,70,70), rect=aplayer_panel)
         screen.blit(plansza_img, (plansza_rect))
         screen.blit(plansza_surface, (0, 0))
         for z in zeton_list:
@@ -246,6 +247,8 @@ def main():
         screen.blit(cursor.image, (cursor.rect))
         for i in player_list:
             screen.fill(globals()[i].color, rect=globals()[i].rect)
+            
+
 
     #Handle Input Events
         for event in pygame.event.get():
