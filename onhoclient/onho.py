@@ -43,26 +43,28 @@ color_list = [
 (204, 204, 202)
 ]
 
-aplayer_panel = pygame.Rect((0, 660), (660, 140))
-sidepanel_size = (340, 800 / liczba_graczy)
+aplayer_panel = pygame.Rect((0, 590), (625, 110))
+sidepanel_size = (375, 700 / liczba_graczy)
 panel_list = []
     
 zeton_imgs = ['zet1.png', 'zet2.png', 'zet3.png']
 zetonsprites = []
-zetonslot1 = pygame.Rect((100, 650), (150, 150))
-zetonslot2 = pygame.Rect((300, 650), (150, 150))
-zetonslot3 = pygame.Rect((500, 650), (150, 150))
+
+zetonslot1 = pygame.Rect((50, 595), (100, 100))
+zetonslot2 = pygame.Rect((180, 595), (100, 100))
+zetonslot3 = pygame.Rect((310, 595), (100, 100))
 
 pygame.init()
 pygame.mouse.set_visible(0)
-screen = pygame.display.set_mode ([1000, 800])
+screen = pygame.display.set_mode ([1000, 700])
 pygame.display.set_caption('Open Neuroshina Hex Online')
 
-plansza_rect = pygame.Rect((0, 0), (660, 660))
+plansza_rect = pygame.Rect((0, 0), (625, 590))
 plansza_img = pygame.image.load(os.path.join('data', "plansza.png")).convert_alpha()
 
-plansza = board.Board(width=660, height=660)
-plansza_surface = pygame.Surface((660, 660), SRCALPHA).convert_alpha()
+plansza = board.Board(width=555, height=520)
+plansza_surface = pygame.Surface((555, 520), SRCALPHA).convert_alpha()
+grid_offset = (50, 10)
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -163,8 +165,10 @@ class Tiles():
         self.image = rotate(self.original, self.angle, 1)
         self.rect = self.image.get_rect(center=center)
         screen.blit(plansza_img, (plansza_rect))
-        screen.blit(plansza_surface, (0, 0))
+        screen.blit(plansza_surface, (grid_offset))
         screen.blit(self.image, (self.rect))
+        for z in zeton_list:
+            screen.blit(globals()[z].image, (globals()[z].rect))
         pygame.display.flip()
         
     def rotomagnes(self):
@@ -242,8 +246,8 @@ def main():
     liczba_pom = 0
 
     for i in player_list:
-        globals()[i].rect_picker(pygame.Rect((660, 0), sidepanel_size))
-        globals()[i].rect.top = help_rect.bottom
+        globals()[i].rect_picker(pygame.Rect((625, 0), sidepanel_size))
+        globals()[i].rect.top = help_rect.bottom + 1
         help_rect = globals()[i].rect
         while True:
             try:
@@ -270,7 +274,6 @@ def main():
         pygame.draw.polygon(plansza_surface, (150, 150, 150), plansza.hex_draw(srodek), 3)
         pygame.draw.polygon(plansza_surface, (255, 255, 255), plansza.hex_draw(srodek), 1)
 
-    playerpanel_size = (660, 140)
 
     font_small = pygame.font.Font(None, 8)
     font_big = pygame.font.Font(None, 17)
@@ -283,25 +286,26 @@ def main():
     logo = pygame.image.load(os.path.join('data', "logo.png")).convert_alpha()
 #Main Loop
     while 1:
+        clock.tick(60)
+        		
+#Test stuff
         if SHOW_FPS == 1:
             print clock.get_fps()
-        clock.tick(60)
-        
-        screen.fill((70,70,70), rect=aplayer_panel)
+
+#Drawing
         screen.blit(plansza_img, (plansza_rect))
-        screen.blit(plansza_surface, (0, 0))
+        screen.blit(plansza_surface, ((grid_offset)))
+        screen.fill((70,70,70), rect=aplayer_panel)
         
         for z in zeton_list:
             screen.blit(globals()[z].image, (globals()[z].rect))
-            
-        screen.blit(cursor.image, (cursor.rect))
         
         for i in player_list:
             screen.fill(globals()[i].color, rect=globals()[i].rect)
             
+        screen.blit(cursor.image, (cursor.rect))
 
-
-    #Handle Input Events
+#Handle Input Events
         for event in pygame.event.get():
             cursor.update()
             if 1 == 1:
@@ -329,7 +333,5 @@ def main():
         for z in zeton_list:
             globals()[z].update()
 
-#Draw Everything
+#Screen flip
         pygame.display.flip()
-
-#Game Over
