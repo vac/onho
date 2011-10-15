@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
-from math import sqrt, ceil, floor
+from math import sqrt
 import maps
 import unittest
 import numpy as np
@@ -307,8 +307,6 @@ class TestBoardFunctions(unittest.TestCase):
             #sprawdzamy czy jak klikamy tuż za krawędzia to czy funkcja zwróci false
             self.assertFalse((self.board.position_on_hex((center[0] + self.board.hex_a + 1, center[1]))[0]))
             self.assertFalse((self.board.position_on_hex((center[0] - self.board.hex_a - 1, center[1]))[0]))
-
-
 
 if __name__ == '__main__':
     unittest.main()
