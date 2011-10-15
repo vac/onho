@@ -46,7 +46,7 @@ color_list = [
 aplayer_panel = pygame.Rect((0, 590), (625, 110))
 sidepanel_size = (375, 700 / liczba_graczy)
 panel_list = []
-    
+
 zeton_imgs = ['zet1.png', 'zet2.png', 'zet3.png']
 zetonsprites = []
 
@@ -63,6 +63,7 @@ plansza_rect = pygame.Rect((0, 0), (625, 590))
 plansza_img = pygame.image.load(os.path.join('data', "plansza.png")).convert_alpha()
 
 plansza = board.Board(width=555, height=520)
+plansza.update()
 plansza_surface = pygame.Surface((555, 520), SRCALPHA).convert_alpha()
 grid_offset = (50, 10)
 
@@ -143,7 +144,7 @@ class Tiles():
             self.tile_angle = 360 + self.angle
         else:
             self.tile_angle = self.angle
-            
+
         self.angle = self.tile_angle
 
         self.image = rotate(self.original, self.angle, 1)
@@ -157,7 +158,7 @@ class Tiles():
             self._spin()
         elif self.mov_var:
             self._moving()
-            
+
     def _rot(self, znak):
         center = self.rect.center
         clock.tick(rot_speed)
@@ -170,7 +171,7 @@ class Tiles():
         for z in zeton_list:
             screen.blit(globals()[z].image, (globals()[z].rect))
         pygame.display.flip()
-        
+
     def rotomagnes(self):
         if self.angle > 30 and self.angle < 60:
             while self.angle < 60:
@@ -178,42 +179,42 @@ class Tiles():
         elif self.angle > 60 and self.angle <= 90:
             while self.angle > 60:
                 self._rot(-1)
-                                
+
         elif self.angle > 90 and self.angle < 120:
             while self.angle < 120:
                 self._rot(1)
         elif self.angle > 120 and self.angle <= 150:
             while self.angle > 120:
                 self._rot(-1)
-                                
+
         elif self.angle > 150 and self.angle < 180:
             while self.angle < 180:
                 self._rot(1)
         elif self.angle > 180 and self.angle <= 210:
             while self.angle > 180:
                 self._rot(-1)
-                
+
         elif self.angle > 210 and self.angle < 240:
             while self.angle < 240:
                 self._rot(1)
         elif self.angle > 240 and self.angle <= 270:
             while self.angle > 240:
-                self._rot(-1)       
-                         
+                self._rot(-1)
+
         elif self.angle > 270 and self.angle < 300:
             while self.angle < 300:
                 self._rot(1)
         elif self.angle > 300 and self.angle <= 330:
             while self.angle > 300:
                 self._rot(-1)
-                                
+
         elif self.angle > 330 and self.angle < 360:
             while self.angle < 360:
                 self._rot(1)
         elif self.angle > 0 and self.angle <= 30:
             while self.angle > 0:
                 self._rot(-1)
-                
+
         print self.rect.center
         print self.angle
 
@@ -269,7 +270,7 @@ def main():
 
 #Create Layout
 
-    for srodek in plansza.hex_centres():
+    for srodek in plansza.hex_centres:
         pygame.draw.polygon(plansza_surface, (0, 0, 0), plansza.hex_draw(srodek), 7)
         pygame.draw.polygon(plansza_surface, (150, 150, 150), plansza.hex_draw(srodek), 3)
         pygame.draw.polygon(plansza_surface, (255, 255, 255), plansza.hex_draw(srodek), 1)
@@ -287,7 +288,7 @@ def main():
 #Main Loop
     while 1:
         clock.tick(60)
-        		
+
 #Test stuff
         if SHOW_FPS == 1:
             print clock.get_fps()
@@ -295,14 +296,14 @@ def main():
 #Drawing
         screen.blit(plansza_img, (plansza_rect))
         screen.blit(plansza_surface, ((grid_offset)))
-        screen.fill((70,70,70), rect=aplayer_panel)
-        
+        screen.fill((70, 70, 70), rect=aplayer_panel)
+
         for z in zeton_list:
             screen.blit(globals()[z].image, (globals()[z].rect))
-        
+
         for i in player_list:
             screen.fill(globals()[i].color, rect=globals()[i].rect)
-            
+
         screen.blit(cursor.image, (cursor.rect))
 
 #Handle Input Events
@@ -319,6 +320,13 @@ def main():
                 elif event.type is MOUSEBUTTONUP:
                     cursor.unclick()
                     for i in zeton_list:
+                        if globals()[i].mov_var:
+                            czy_nad_hexem, index_pola, srodek_pola = plansza.position_on_hex(pygame.mouse.get_pos())
+                            if czy_nad_hexem:
+                                #TODO: rect.center ustawia lewy górny róg żetonu - a nie środek jak sugeruje nazwa
+                                #TODO: z kursorem jest tez chyba jakoś dziwnie - jego pozycja to nie do końca ta, która wynika z grafiki kursora
+                                #globals()[i].rect.center = srodek_pola #do odkomentowania jak środki będą już działać
+                                globals()[i].rect.center = srodek_pola - plansza.hex_size / 2.0 #do wywalenia, ale póki co to ładniej działa niż ta linijka wyżej
                         globals()[i].unclicked()
 
             if event.type == MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[2]:
@@ -335,3 +343,6 @@ def main():
 
 #Screen flip
         pygame.display.flip()
+
+if __name__ == '__main__':
+    main()
