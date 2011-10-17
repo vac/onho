@@ -356,10 +356,9 @@ def main():
                             help2 = pygame.mouse.get_pos()[1] - grid_offset[1]
                             czy_nad_hexem, index_pola, srodek_pola = plansza.position_on_hex((help1, help2))
                             if czy_nad_hexem:
-                                globals()[i].rect.center = srodek_pola + grid_offset#do odkomentowania jak środki będą już działać
+                                globals()[i].rect.center = srodek_pola + grid_offset
                             else:
-                                print check_slots()
-                                print zetonslot1_occupy
+                                check_slots()
                                 if zetonslot1_occupy == False:
                                     globals()[i].rect.center = zetonslot1.center
                                 elif zetonslot2_occupy == False:
