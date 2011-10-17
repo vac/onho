@@ -70,8 +70,8 @@ plansza = board.Board(width=555, height=520)
 plansza.update()
 plansza_surface = pygame.Surface((555, 520), SRCALPHA).convert_alpha()
 
-#grid_offset = (50, 10)
-grid_offset = (0, 0)
+grid_offset = (50, 10)
+#grid_offset = (0, 0)
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -101,28 +101,28 @@ def load_sound(name):
     return sound
 
 def check_slots():
-	global zetonslot1_occupy, zetonslot2_occupy, zetonslot3_occupy
-	for o in zeton_list:
-		if (zetonslot1.colliderect(globals()[o].rect)):
-			zetonslot1_occupy = True
-			break
-		else :
-			zetonslot1_occupy = False
-	for o in zeton_list:
-		if (zetonslot2.colliderect(globals()[o].rect)):
-			zetonslot2_occupy = True
-			break
-		else :
-			zetonslot2_occupy = False
-	for o in zeton_list:
-		if (zetonslot3.colliderect(globals()[o].rect)):
-			zetonslot3_occupy = True
-			break
-		else :
-			zetonslot3_occupy = False
-	return zetonslot1_occupy, zetonslot2_occupy, zetonslot3_occupy
-		
-		
+    global zetonslot1_occupy, zetonslot2_occupy, zetonslot3_occupy
+    for o in zeton_list:
+        if (zetonslot1.colliderect(globals()[o].rect)):
+            zetonslot1_occupy = True
+            break
+        else :
+            zetonslot1_occupy = False
+    for o in zeton_list:
+        if (zetonslot2.colliderect(globals()[o].rect)):
+            zetonslot2_occupy = True
+            break
+        else :
+            zetonslot2_occupy = False
+    for o in zeton_list:
+        if (zetonslot3.colliderect(globals()[o].rect)):
+            zetonslot3_occupy = True
+            break
+        else :
+            zetonslot3_occupy = False
+    return zetonslot1_occupy, zetonslot2_occupy, zetonslot3_occupy
+        
+        
 #classes for our game objects
 
 class Cursor():
@@ -352,18 +352,20 @@ def main():
                     cursor.unclick()
                     for i in zeton_list:
                         if globals()[i].mov_var:
-                            czy_nad_hexem, index_pola, srodek_pola = plansza.position_on_hex(pygame.mouse.get_pos())
+                            help1 = pygame.mouse.get_pos()[0] - grid_offset[0]
+                            help2 = pygame.mouse.get_pos()[1] - grid_offset[1]
+                            czy_nad_hexem, index_pola, srodek_pola = plansza.position_on_hex((help1, help2))
                             if czy_nad_hexem:
-                                globals()[i].rect.center = srodek_pola #do odkomentowania jak środki będą już działać
+                                globals()[i].rect.center = srodek_pola + grid_offset#do odkomentowania jak środki będą już działać
                             else:
-								print check_slots()
-								print zetonslot1_occupy
-								if zetonslot1_occupy == False:
-									globals()[i].rect.center = zetonslot1.center
-								elif zetonslot2_occupy == False:
-									globals()[i].rect.center = zetonslot2.center
-								elif zetonslot3_occupy == False:
-									globals()[i].rect.center = zetonslot3.center
+                                print check_slots()
+                                print zetonslot1_occupy
+                                if zetonslot1_occupy == False:
+                                    globals()[i].rect.center = zetonslot1.center
+                                elif zetonslot2_occupy == False:
+                                    globals()[i].rect.center = zetonslot2.center
+                                elif zetonslot3_occupy == False:
+                                    globals()[i].rect.center = zetonslot3.center
                         globals()[i].unclicked()
 
             if event.type == MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[2]:
