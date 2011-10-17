@@ -18,6 +18,14 @@ def handle(socket, address):
         if line.strip().lower() == 'quit':
             print ("-client quit"), address
             break
+        try:
+            python_object = json.loads(line)
+            print 'Odebrano JSON:'
+            print python_object
+            for key in python_object.keys():
+                print key, '=', python_object[key]
+        finally:
+            pass
         fileobj.write(line)
         fileobj.flush()
         print ("echoed %r" % line)
