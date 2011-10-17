@@ -54,8 +54,12 @@ zetonslot1 = pygame.Rect((50, 595), (100, 100))
 zetonslot2 = pygame.Rect((180, 595), (100, 100))
 zetonslot3 = pygame.Rect((310, 595), (100, 100))
 
+zetonslot1_occupy = True
+zetonslot2_occupy = True
+zetonslot3_occupy = True
+
 pygame.init()
-pygame.mouse.set_visible(0)
+pygame.mouse.set_visible(1)
 screen = pygame.display.set_mode ([1000, 700])
 pygame.display.set_caption('Open Neuroshina Hex Online')
 
@@ -65,7 +69,9 @@ plansza_img = pygame.image.load(os.path.join('data', "plansza.png")).convert_alp
 plansza = board.Board(width=555, height=520)
 plansza.update()
 plansza_surface = pygame.Surface((555, 520), SRCALPHA).convert_alpha()
-grid_offset = (50, 10)
+
+#grid_offset = (50, 10)
+grid_offset = (0, 0)
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -94,6 +100,29 @@ def load_sound(name):
         raise SystemExit, message
     return sound
 
+def check_slots():
+	global zetonslot1_occupy, zetonslot2_occupy, zetonslot3_occupy
+	for o in zeton_list:
+		if (zetonslot1.colliderect(globals()[o].rect)):
+			zetonslot1_occupy = True
+			break
+		else :
+			zetonslot1_occupy = False
+	for o in zeton_list:
+		if (zetonslot2.colliderect(globals()[o].rect)):
+			zetonslot2_occupy = True
+			break
+		else :
+			zetonslot2_occupy = False
+	for o in zeton_list:
+		if (zetonslot3.colliderect(globals()[o].rect)):
+			zetonslot3_occupy = True
+			break
+		else :
+			zetonslot3_occupy = False
+	return zetonslot1_occupy, zetonslot2_occupy, zetonslot3_occupy
+		
+		
 #classes for our game objects
 
 class Cursor():
@@ -103,7 +132,7 @@ class Cursor():
 
     def update(self):
         pos = pygame.mouse.get_pos()
-        self.rect.center = pos
+        self.rect.topleft = pos
         if self.clicking:
             self.rect.move_ip(5, 5)
 
@@ -317,16 +346,24 @@ def main():
                     for i in zeton_list:
                         if cursor.click(globals()[i]):
                             globals()[i].clicked(2)
+                            break
+                            
                 elif event.type is MOUSEBUTTONUP:
                     cursor.unclick()
                     for i in zeton_list:
                         if globals()[i].mov_var:
                             czy_nad_hexem, index_pola, srodek_pola = plansza.position_on_hex(pygame.mouse.get_pos())
                             if czy_nad_hexem:
-                                #TODO: rect.center ustawia lewy górny róg żetonu - a nie środek jak sugeruje nazwa
-                                #TODO: z kursorem jest tez chyba jakoś dziwnie - jego pozycja to nie do końca ta, która wynika z grafiki kursora
-                                #globals()[i].rect.center = srodek_pola #do odkomentowania jak środki będą już działać
-                                globals()[i].rect.center = srodek_pola - plansza.hex_size / 2.0 #do wywalenia, ale póki co to ładniej działa niż ta linijka wyżej
+                                globals()[i].rect.center = srodek_pola #do odkomentowania jak środki będą już działać
+                            else:
+								print check_slots()
+								print zetonslot1_occupy
+								if zetonslot1_occupy == False:
+									globals()[i].rect.center = zetonslot1.center
+								elif zetonslot2_occupy == False:
+									globals()[i].rect.center = zetonslot2.center
+								elif zetonslot3_occupy == False:
+									globals()[i].rect.center = zetonslot3.center
                         globals()[i].unclicked()
 
             if event.type == MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[2]:
