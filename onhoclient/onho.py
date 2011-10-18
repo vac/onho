@@ -50,9 +50,9 @@ panel_list = []
 zeton_imgs = ['zet1.png', 'zet2.png', 'zet3.png']
 zetonsprites = []
 
-zetonslot1 = pygame.Rect((50, 595), (100, 100))
-zetonslot2 = pygame.Rect((180, 595), (100, 100))
-zetonslot3 = pygame.Rect((310, 595), (100, 100))
+zetonslot1 = pygame.Rect((90, 640), (10, 10))
+zetonslot2 = pygame.Rect((220, 640), (10, 10))
+zetonslot3 = pygame.Rect((350, 640), (10, 10))
 
 zetonslot1_occupy = True
 zetonslot2_occupy = True
@@ -103,19 +103,19 @@ def load_sound(name):
 def check_slots():
     global zetonslot1_occupy, zetonslot2_occupy, zetonslot3_occupy
     for o in zeton_list:
-        if (zetonslot1.colliderect(globals()[o].rect)):
+        if (zetonslot1.collidepoint(globals()[o].rect.center)):
             zetonslot1_occupy = True
             break
         else :
             zetonslot1_occupy = False
     for o in zeton_list:
-        if (zetonslot2.colliderect(globals()[o].rect)):
+        if (zetonslot2.collidepoint(globals()[o].rect.center)):
             zetonslot2_occupy = True
             break
         else :
             zetonslot2_occupy = False
     for o in zeton_list:
-        if (zetonslot3.colliderect(globals()[o].rect)):
+        if (zetonslot3.collidepoint(globals()[o].rect.center)):
             zetonslot3_occupy = True
             break
         else :
