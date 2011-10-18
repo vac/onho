@@ -5,7 +5,6 @@ import pygame, sys, os
 import random, math
 sys.path.append('..')
 from pygame.locals import *
-#import pygame._view
 from onhocommon import board
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
@@ -371,6 +370,7 @@ def main():
                 for i in zeton_list:
                     if cursor.click(globals()[i]):
                         globals()[i].clicked(0)
+                        break
 
 
 
