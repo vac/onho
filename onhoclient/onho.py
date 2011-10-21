@@ -123,8 +123,19 @@ aplayer_panel_rect = pygame.Rect((0, 590), (625, 110))
 
 aplayer_panel_ava, aplayer_panel_avarect = load_image("avatar.png", -1)
 aplayer_panel_clk, aplayer_panel_clkrect = load_image("clock.png", -1)
-aplayer_panel_res, aplayer_panel_resrect = load_image("reset.png", -1)
-aplayer_panel_end, aplayer_panel_endrect = load_image("end.png", -1)
+
+
+aplayer_panel_res_n, aplayer_panel_resrect_n = load_image("reset_n.png", -1)
+aplayer_panel_end_n, aplayer_panel_endrect_n = load_image("end_n.png", -1)
+
+aplayer_panel_res_h, aplayer_panel_resrect_h = load_image("reset_h.png", -1)
+aplayer_panel_end_h, aplayer_panel_endrect_h = load_image("end_h.png", -1)
+
+aplayer_panel_res_d, aplayer_panel_resrect_d = load_image("reset_d.png", -1)
+aplayer_panel_end_d, aplayer_panel_endrect_d = load_image("end_d.png", -1)
+
+aplayer_panel_res, aplayer_panel_resrect = aplayer_panel_res_d, aplayer_panel_resrect_n
+aplayer_panel_end, aplayer_panel_endrect = aplayer_panel_end_d, aplayer_panel_endrect_n
 
 aplayer_panel_leftrect = pygame.Rect((0, 590), (230, 110))
 aplayer_panel_avarect.left = aplayer_panel_leftrect.left + 7
@@ -208,7 +219,7 @@ def check_slots():
 class Chat():
     def __init__(self, sender, text):
         self.text = text
-        self.rendertext = fontchat.render(str(sender) + str(text), True, (player0.color))
+        self.rendertext = fontchat.render(str(sender) + text, True, (player0.color))
         self.sender = sender
         self.rect = self.rendertext.get_rect()
         self.rect.bottom = chat_rect.bottom - 20 - len(chat_list)*20
@@ -223,16 +234,33 @@ class Cursor():
     def update(self):
         pos = pygame.mouse.get_pos()
         self.rect.topleft = pos
-        if self.clicking:
-            self.rect.move_ip(5, 5)
+
+        if aplayer_panel_resrect.collidepoint(pos):
+           globals()["aplayer_panel_res"] =  globals()["aplayer_panel_res_h"]
+        else:
+           globals()["aplayer_panel_res"] =  globals()["aplayer_panel_res_n"]
+        if aplayer_panel_endrect.collidepoint(pos):
+           globals()["aplayer_panel_end"] =  globals()["aplayer_panel_end_h"]
+        else:
+           globals()["aplayer_panel_end"] =  globals()["aplayer_panel_end_n"]
+         
 
     def click(self, target):
         self.clicking = 1
-        hitbox = self.rect.inflate(-5, -5)
-        return hitbox.colliderect(target.rect)
-
+        hitbox = self.rect
+        try:
+            return target.rect.collidepoint(pygame.mouse.get_pos())
+            print "zeton"
+        except:
+            return target.collidepoint(pygame.mouse.get_pos())
+        
     def unclick(self):
         self.clicking = 0
+        aplayer_panel_resrect.bottom = aplayer_panel_rect.bottom - 7
+        aplayer_panel_endrect.bottom = aplayer_panel_rect.bottom - 7
+        aplayer_panel_endrect.right = aplayer_panel_leftrect.right - 4
+        aplayer_panel_resrect.right = aplayer_panel_endrect.left - 4
+
 
 class Player():
     def __init__(self, name):
@@ -483,6 +511,7 @@ def main():
             pygame.key.set_repeat(10000, 10000)
             cursor.update()
             if 1 == 1:
+                
                 if event.type == MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[1]:
                     print "srodkowy guzik"
 
@@ -491,6 +520,15 @@ def main():
                         if cursor.click(globals()[i]):
                             globals()[i].clicked(2)
                             break
+                    if cursor.click(aplayer_panel_resrect):
+                        print "reset"
+                        aplayer_panel_resrect.move_ip(3,3)
+                        pass
+                    elif cursor.click(aplayer_panel_endrect):
+                        print "koniec tury"
+                        aplayer_panel_endrect.move_ip(3,3)
+                        pass
+                            
                             
                 elif event.type is MOUSEBUTTONUP:
                     cursor.unclick()
