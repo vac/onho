@@ -18,7 +18,10 @@ Directions = array([Direction.N, Direction.NE,
                     Direction.SW, Direction.NW
             ])
 
-class Position:
+def all_directions(value):
+    return array([value] * 6)
+
+class Position(object):
     INDEX = 0 #index of position index in tuple
     ROTATION = 1 #index of rotation in tuple
 
@@ -135,4 +138,5 @@ class TestOrientationFunctions(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    #unittest.main()
+    value = 0

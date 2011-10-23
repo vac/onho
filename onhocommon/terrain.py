@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
 
-class TerrainType(object):
+class TerrainType:
     '''Class defining terrain types which can additionally describe board hex'''
     NONE = 0
     THICK = 1
@@ -25,7 +25,7 @@ class TerrainType(object):
     PRIZE = 19
     FATAL = 20
 
-class TerrainTile(object):
+class TerrainTile:
     '''Class defining how board hex can look like on map'''
     NONE = 0
     FOREST = 1
