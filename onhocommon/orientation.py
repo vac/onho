@@ -21,6 +21,12 @@ Directions = array([Direction.N, Direction.NE,
 def all_directions(value):
     return array([value] * 6)
 
+def around(value):
+    return all_directions(value)
+
+def directed(N=0, NE=0, SE=0, S=0, SW=0, NW=0):
+    return array([N, NE, SE, S, SW, NW])
+
 class Position(object):
     INDEX = 0 #index of position index in tuple
     ROTATION = 1 #index of rotation in tuple

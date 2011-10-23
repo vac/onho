@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 from orientation import all_directions
+from onhocommon.orientation import all_directions
 
 class Type:
     UNKNOWN = 0
@@ -57,26 +58,45 @@ class Board(Tile):
 
 class Unit(Board):
     '''Class representing all units/soldiers tiles'''
-    def __init__(self, **kwargs):
+    def __init__(self,
+                initiative=[0],
+                mobility=0,
+                toughness=0,
+                bomb=0,
+                poisonous=0,
+                spy=0,
+                push=0,
+                transport=0,
+                sniper=0,
+                pile=0,
+                net=all_directions(0),
+                armor=all_directions(0),
+                attack_melee=all_directions(0),
+                attack_ranged=all_directions(0),
+                attack_gauss=all_directions(0),
+                attack_homing=all_directions(0),
+                attack_narrow=all_directions(0),
+                 ** kwargs):
         super(Unit, self).__init__(**kwargs)
         self.type_id = Type.UNIT
 
-        self.initiative = [0]
-        self.mobility = 0
-        self.toughness = 0
-        self.poisonous = 0
-        self.spy = 0
-        self.push = 0 #pusher
-        self.transport = 0 #transporter
-        self.sniper = 0
-        self.pile = 0 #bio-droid
-        self.net = all_directions(0)
-        self.attack_melee = all_directions(0)
-        self.attack_ranged = all_directions(0)
-        self.attack_gauss = all_directions(0)
-        self.attack_homing = all_directions(0) #bazooka
-        self.attack_narrow = all_directions(0) #shotgun
-        self.armor = all_directions(0)
+        self.initiative = initiative
+        self.mobility = mobility
+        self.toughness = toughness
+        self.bomb = bomb #Clown
+        self.poisonous = poisonous
+        self.spy = spy
+        self.push = push #pusher
+        self.transport = transport #transporter
+        self.sniper = sniper
+        self.pile = pile #bio-droid
+        self.net = net
+        self.armor = armor
+        self.attack_melee = attack_melee
+        self.attack_ranged = attack_ranged
+        self.attack_gauss = attack_gauss
+        self.attack_homing = attack_homing #bazooka
+        self.attack_narrow = attack_narrow #shotgun
 
 class Module(Board):
     '''Class representing all modules tiles'''
