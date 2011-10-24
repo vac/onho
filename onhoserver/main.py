@@ -5,6 +5,8 @@ import sys, getopt
 from handler import handle
 from onhocommon import version
 
+_debug = 0
+
 def usage():
     print '''
     --help
@@ -12,9 +14,9 @@ def usage():
     --ip=0.0.0.0
     '''
 
-
 port = 7872
-ip = '0.0.0.0'
+ip = '127.0.0.1'
+
 try:
     opts, args = getopt.getopt(sys.argv, "hp:d", ["help", "port=", "ip="])
 except getopt.GetoptError:
@@ -26,7 +28,6 @@ for opt, arg in opts:
     if opt == "--ip":
         ip = arg
     elif opt == '-d':
-        global _debug
         _debug = 1
     elif opt in ("-p", "--port"):
         port = arg

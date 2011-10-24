@@ -80,7 +80,7 @@ class Unit(Board):
         super(Unit, self).__init__(**kwargs)
         self.type_id = Type.UNIT
 
-        self.initiative = initiative
+        self.initiative = [] + initiative
         self.mobility = mobility
         self.toughness = toughness
         self.bomb = bomb #Clown
@@ -100,39 +100,58 @@ class Unit(Board):
 
 class Module(Board):
     '''Class representing all modules tiles'''
-    def __init__(self, **kwargs):
+    def __init__(self,
+                mobility=0,
+                toughness=0,
+                armor=all_directions(0),
+                takeover=all_directions(0),
+                heal=all_directions(0),
+                bonus_initiative=all_directions(0),
+                bonus_toughness=all_directions(0),
+                bonus_mobility=all_directions(0),
+                bonus_attack_melee=all_directions(0),
+                bonus_attack_ranged=all_directions(0),
+                bonus_action=all_directions(0),
+                bonus_abbility=all_directions(0),
+                bonus_filter=None,
+                special_filter=None,
+                special_decorator=None,
+                 ** kwargs):
         super(Module, self).__init__(**kwargs)
         self.type_id = Type.MODULE
 
-        self.mobility = 0
-        self.toughness = 0
+        self.mobility = mobility
+        self.toughness = toughness
 
-        self.armor = all_directions(0)
+        self.armor = armor
 
-        self.takeover = all_directions(0) #agitator
-        self.heal = all_directions(0) #medic
+        self.takeover = takeover #agitator
+        self.heal = heal #medic
 
-        self.bonus_initiative = all_directions(0) #scout +1, saboteur -1
-        self.bonus_toughness = all_directions(0) #NY HQ
-        self.bonus_mobility = all_directions(0) #transport
-        self.bonus_attack_melee = all_directions(0) #officer I
-        self.bonus_attack_ranged = all_directions(0) #officer II
-        self.bonus_action = all_directions(0) #mother
+        self.bonus_initiative = bonus_initiative #scout +1, saboteur -1
+        self.bonus_toughness = bonus_toughness #NY HQ
+        self.bonus_mobility = bonus_mobility #transport
+        self.bonus_attack_melee = bonus_attack_melee #officer I
+        self.bonus_attack_ranged = bonus_attack_ranged #officer II
+        self.bonus_action = bonus_action #mother
 
-        self.bonus_abbility = all_directions(0) #quartermaster
-        self.bonus_filter = None #Scoper - jakie rodzje jednostek beda podelgały standardowym bonusom
+        self.bonus_abbility = bonus_abbility #quartermaster
+        self.bonus_filter = bonus_filter #Scoper - jakie rodzje jednostek beda podelgały działaniu modułu
 
-        self.special_filter = None #recon center, quartermaster
-        self.special_decorator = None #recon center, quartermaster
+        self.special_filter = special_filter #recon center, quartermaster
+        self.special_decorator = special_decorator #recon center, quartermaster
 
 
 class HeadQuarter(Module):
     '''Class representing all headquarters tiles'''
-    def __init__(self, **kwargs):
+    def __init__(self,
+                 initiative=[0],
+                 attack_melee=all_directions(1),
+                 ** kwargs):
         super(HeadQuarter, self).__init__(**kwargs)
         self.type_id = Type.HEADQUARTER
-        self.initiative = [0]
-        self.attack_melee = all_directions(1)
+        self.initiative = [] + initiative
+        self.attack_melee = attack_melee
 
 class Foundation(Board):
     '''Class representing all foundation/terrain tiles'''
