@@ -481,7 +481,7 @@ def main():
         screen.blit(aplayer_panel_clk, (aplayer_panel_clkrect))
         screen.blit(aplayer_panel_res, (aplayer_panel_resrect))
         screen.blit(aplayer_panel_end, (aplayer_panel_endrect))
-        ygame.draw.line(screen, (70, 70, 70), (player1.rect.left -1 ,0), (aplayer_panel_rect.right - 1, 700), 1)
+        pygame.draw.line(screen, (70, 70, 70), (player1.rect.left -1 ,0), (aplayer_panel_rect.right - 1, 700), 1)
         
 #Drawing tiles
         for z in zeton_list:
